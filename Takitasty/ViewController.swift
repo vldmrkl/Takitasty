@@ -14,6 +14,8 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpLayout()
+        UserDefaults.standard.set(0, forKey: "lat")
+        UserDefaults.standard.set(0, forKey: "lon")
     }
 
 
