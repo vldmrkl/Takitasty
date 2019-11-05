@@ -23,15 +23,21 @@ class LocationRequestViewController: UIViewController, CLLocationManagerDelegate
         let status = CLLocationManager.authorizationStatus()
 
         switch status {
+            case .notDetermined:
+                locationManager.requestWhenInUseAuthorization()
+                return
 
-        case .notDetermined:
-            print("not determined")
-            locationManager.requestWhenInUseAuthorization()
-            return
+        case .restricted:
+            break
+        case .denied:
+            break
+        case .authorizedAlways:
+            break
+        case .authorizedWhenInUse:
+            break
         @unknown default:
             break
         }
-
     }
 
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
@@ -42,8 +48,11 @@ class LocationRequestViewController: UIViewController, CLLocationManagerDelegate
     }
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        if let currentLocation = locations.last {
-            print("Current location: \(currentLocation)")
+        if let currentLocation = locations.last {            UserDefaults.standard.set(currentLocation.coordinate.latitude, forKey: "lat")
+            UserDefaults.standard.set(currentLocation.coordinate.longitude, forKey: "lon")
+            let menuVC = ViewController()
+            menuVC.modalPresentationStyle = .fullScreen
+            self.present(menuVC, animated: true, completion: nil)
         }
     }
 
