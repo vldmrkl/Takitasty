@@ -25,13 +25,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             let viewController: UIViewController
             let lat = UserDefaults.standard.double(forKey: "lat")
             let lon = UserDefaults.standard.double(forKey: "lon")
-            print(lat)
-            print(lon)
             if (lat != 0 && lon != 0) {
-                print("vc")
                 viewController = storyboard.instantiateViewController(withIdentifier: "MenuViewControllerID") as! ViewController
             } else {
-                print("lvc")
                 viewController = storyboard.instantiateViewController(withIdentifier: "LocationViewControllerID") as! LocationRequestViewController
             }
             

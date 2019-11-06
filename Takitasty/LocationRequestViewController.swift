@@ -11,7 +11,21 @@ import CoreLocation
 import Lottie
 
 class LocationRequestViewController: UIViewController, CLLocationManagerDelegate {
+    private let service = APIService()
     var locationManager = CLLocationManager()
+    var location: Location?  {
+        didSet {
+            let menuVC = ViewController()
+            menuVC.modalPresentationStyle = .fullScreen
+            if let cityName = location?.name {
+                menuVC.city = cityName
+            }
+
+            self.present(menuVC, animated: true, completion: nil)
+        }
+    }
+    var spinner = UIActivityIndicatorView(style: .large)
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,9 +37,9 @@ class LocationRequestViewController: UIViewController, CLLocationManagerDelegate
         let status = CLLocationManager.authorizationStatus()
 
         switch status {
-            case .notDetermined:
-                locationManager.requestWhenInUseAuthorization()
-                return
+        case .notDetermined:
+            locationManager.requestWhenInUseAuthorization()
+            return
 
         case .restricted:
             break
@@ -41,23 +55,47 @@ class LocationRequestViewController: UIViewController, CLLocationManagerDelegate
     }
 
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        print("status")
         if (status == .authorizedAlways || status == .authorizedWhenInUse){
             locationManager.requestLocation()
+
+            spinner.translatesAutoresizingMaskIntoConstraints = false
+            spinner.backgroundColor = UIColor(white: 0.8, alpha: 0.75)
+            spinner.layer.cornerRadius = 15.0
+
+            spinner.startAnimating()
+            self.view.addSubview(spinner)
+
+            spinner.widthAnchor.constraint(equalToConstant: 100).isActive = true
+            spinner.heightAnchor.constraint(equalToConstant: 100).isActive = true
+            spinner.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+            spinner.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+
         }
     }
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        if let currentLocation = locations.last {            UserDefaults.standard.set(currentLocation.coordinate.latitude, forKey: "lat")
-            UserDefaults.standard.set(currentLocation.coordinate.longitude, forKey: "lon")
-            let menuVC = ViewController()
-            menuVC.modalPresentationStyle = .fullScreen
-            self.present(menuVC, animated: true, completion: nil)
+        if let currentLocation = locations.last {
+            let lat = currentLocation.coordinate.latitude
+            let lon = currentLocation.coordinate.longitude
+            UserDefaults.standard.set(lat, forKey: "lat")
+            UserDefaults.standard.set(lon, forKey: "lon")
+            fetchCity(latitude: lat, longitude: lon)
         }
     }
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("error:: \(error.localizedDescription)")
+    }
+
+    func fetchCity(latitude: Double, longitude: Double) {
+        service.fetchLocation(latitude, longitude) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let location): self?.location = location
+                case .failure: self?.location = nil
+                }
+            }
+        }
     }
 
     func setUpLayout() {
@@ -107,6 +145,7 @@ class LocationRequestViewController: UIViewController, CLLocationManagerDelegate
         locationButton.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(locationButton)
         locationButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-        locationButton.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        locationButton.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -50).isActive = true
+
     }
 }

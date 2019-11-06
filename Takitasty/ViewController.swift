@@ -9,7 +9,7 @@
 import UIKit
 
 class ViewController: UIViewController {
-    let city = "Toronto"
+    var city = "Toronto"
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -105,7 +105,7 @@ class ViewController: UIViewController {
         locationStackView.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(locationStackView)
         locationStackView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
-        locationStackView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        locationStackView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -25).isActive = true
 
     }
 
