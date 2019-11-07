@@ -19,6 +19,8 @@
 		2D2B4B56236F6F09001B46B1 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D2B4B55236F6F09001B46B1 /* Colors.swift */; };
 		2D2B4B5A236FBF04001B46B1 /* LocationRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D2B4B59236FBF04001B46B1 /* LocationRequestViewController.swift */; };
 		2D2B4B5C236FC36A001B46B1 /* locationAnimation.json in Resources */ = {isa = PBXBuildFile; fileRef = 2D2B4B5B236FC36A001B46B1 /* locationAnimation.json */; };
+		2D4AF9452373CEDB0048E623 /* RestaurantsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D4AF9442373CEDB0048E623 /* RestaurantsViewController.swift */; };
+		2D4AF94B2373D4430048E623 /* Restaurant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D4AF94A2373D4430048E623 /* Restaurant.swift */; };
 		2D77AD0423725F2800FBEADF /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D77AD0323725F2800FBEADF /* APIService.swift */; };
 		2D77AD0623725F9800FBEADF /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D77AD0523725F9800FBEADF /* Location.swift */; };
 /* End PBXBuildFile section */
@@ -38,6 +40,8 @@
 		2D2B4B55236F6F09001B46B1 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		2D2B4B59236FBF04001B46B1 /* LocationRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationRequestViewController.swift; sourceTree = "<group>"; };
 		2D2B4B5B236FC36A001B46B1 /* locationAnimation.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = locationAnimation.json; sourceTree = "<group>"; };
+		2D4AF9442373CEDB0048E623 /* RestaurantsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantsViewController.swift; sourceTree = "<group>"; };
+		2D4AF94A2373D4430048E623 /* Restaurant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Restaurant.swift; sourceTree = "<group>"; };
 		2D77AD0323725F2800FBEADF /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
 		2D77AD0523725F9800FBEADF /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 		85A2795C116C56A60FA6979D /* Pods_Takitasty.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Takitasty.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -82,7 +86,9 @@
 				2D77AD0323725F2800FBEADF /* APIService.swift */,
 				2D1067BE2372856900E9A1F9 /* APIKey.swift */,
 				2D77AD0523725F9800FBEADF /* Location.swift */,
+				2D4AF94A2373D4430048E623 /* Restaurant.swift */,
 				2D0CF6F1236A835700068710 /* ViewController.swift */,
+				2D4AF9442373CEDB0048E623 /* RestaurantsViewController.swift */,
 				2D2B4B59236FBF04001B46B1 /* LocationRequestViewController.swift */,
 				2D2B4B55236F6F09001B46B1 /* Colors.swift */,
 				2D2B4B53236F6EDC001B46B1 /* UIView+Extension.swift */,
@@ -231,6 +237,8 @@
 				2D0CF6F2236A835700068710 /* ViewController.swift in Sources */,
 				2D77AD0423725F2800FBEADF /* APIService.swift in Sources */,
 				2D77AD0623725F9800FBEADF /* Location.swift in Sources */,
+				2D4AF94B2373D4430048E623 /* Restaurant.swift in Sources */,
+				2D4AF9452373CEDB0048E623 /* RestaurantsViewController.swift in Sources */,
 				2D2B4B56236F6F09001B46B1 /* Colors.swift in Sources */,
 				2D0CF6EE236A835700068710 /* AppDelegate.swift in Sources */,
 				2D2B4B5A236FBF04001B46B1 /* LocationRequestViewController.swift in Sources */,

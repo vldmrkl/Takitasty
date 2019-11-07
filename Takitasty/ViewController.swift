@@ -9,15 +9,21 @@
 import UIKit
 
 class ViewController: UIViewController {
+    private let service = APIService()
     var city = "Toronto"
+    var nearbyRestaurants: [Restaurant] = [] {
+        didSet {
+            let restaurantsVC = RestaurantsViewController()
+            restaurantsVC.restaurants = nearbyRestaurants
+            restaurantsVC.modalPresentationStyle = .fullScreen
+            self.show(restaurantsVC, sender: self)
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpLayout()
-        UserDefaults.standard.set(0, forKey: "lat")
-        UserDefaults.standard.set(0, forKey: "lon")
     }
-
 
     func setUpLayout() {
         if let bgImage = UIImage(named: "food-bg") {
@@ -67,7 +73,7 @@ class ViewController: UIViewController {
         buttonsStackView.spacing = 10
 
         buttonsStackView.addArrangedSubview(createMenuButton(title: "All Restaurants", action: nil))
-        buttonsStackView.addArrangedSubview(createMenuButton(title: "Restaurants By Cuisine", action: nil))
+        buttonsStackView.addArrangedSubview(createMenuButton(title: "Restaurants By Categories", action: #selector(showRestaurants)))
         buttonsStackView.addArrangedSubview(createMenuButton(title: "I'm Feeling Lucky", action: nil))
 
         mainStackView.addArrangedSubview(buttonsStackView)
@@ -125,9 +131,25 @@ class ViewController: UIViewController {
         return menuButton
     }
 
-    @objc func testFunc(sender: UIButton){
+    @objc func testFunc(sender: UIButton) {
         print("kaboom")
     }
+
+    @objc func showRestaurants(sender: UIButton) {
+        let lat = UserDefaults.standard.double(forKey: "lat")
+        let lon = UserDefaults.standard.double(forKey: "lon")
+        print("\(lat) \(lon)")
+        service.fetchRestaurants(lat, lon) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let restaurants): self?.nearbyRestaurants = restaurants
+                case .failure: print("Couldn't fetch Restaurants")
+                }
+            }
+        }
+    }
+
+
 
     override var preferredStatusBarStyle : UIStatusBarStyle {
         return UIStatusBarStyle.lightContent

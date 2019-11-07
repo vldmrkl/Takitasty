@@ -24,5 +24,4 @@ struct Location {
         self.name = name
         self.country = country
     }
-    
 }
