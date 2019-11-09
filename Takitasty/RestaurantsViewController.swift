@@ -8,23 +8,30 @@
 
 import UIKit
 
-class RestaurantsViewController: UINavigationController, UITableViewDataSource {
+class RestaurantsViewController: UINavigationController, UITableViewDataSource, UITableViewDelegate {
     let restaurantsTableView = UITableView()
     var restaurants: [Restaurant] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
         restaurantsTableView.dataSource = self
-        restaurantsTableView.register(UITableViewCell.self, forCellReuseIdentifier: "restaurantCell")
-
+        restaurantsTableView.delegate = self
+        restaurantsTableView.register(RestaurantTableViewCell.self, forCellReuseIdentifier: "restaurantCell")
+        view.backgroundColor = .white
         view.addSubview(restaurantsTableView)
-
+        
         restaurantsTableView.translatesAutoresizingMaskIntoConstraints = false
-        restaurantsTableView.topAnchor.constraint(equalTo:view.topAnchor).isActive = true
-        restaurantsTableView.leftAnchor.constraint(equalTo:view.leftAnchor).isActive = true
-        restaurantsTableView.rightAnchor.constraint(equalTo:view.rightAnchor).isActive = true
-        restaurantsTableView.bottomAnchor.constraint(equalTo:view.bottomAnchor).isActive = true
+        restaurantsTableView.topAnchor.constraint(equalTo:view.safeAreaLayoutGuide.topAnchor).isActive = true
 
+        restaurantsTableView.leftAnchor.constraint(equalTo:view.safeAreaLayoutGuide.leftAnchor).isActive = true
+        restaurantsTableView.rightAnchor.constraint(equalTo:view.safeAreaLayoutGuide.rightAnchor).isActive = true
+        restaurantsTableView.bottomAnchor.constraint(equalTo:view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+
+        restaurantsTableView.separatorStyle = .none
+    }
+
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 250
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -32,8 +39,8 @@ class RestaurantsViewController: UINavigationController, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "restaurantCell", for: indexPath)
-        cell.textLabel?.text = restaurants[indexPath.row].name!
+        let cell = tableView.dequeueReusableCell(withIdentifier: "restaurantCell", for: indexPath) as! RestaurantTableViewCell
+        cell.nameLabel.text = restaurants[indexPath.row].name!
         return cell
     }
 }

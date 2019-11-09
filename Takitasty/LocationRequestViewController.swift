@@ -133,8 +133,9 @@ class LocationRequestViewController: UIViewController, CLLocationManagerDelegate
         mainStackView.centerYAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.centerYAnchor).isActive = true
 
         let locationButton = UIButton(frame: CGRect(x: 0, y: 0, width: 300, height: 50))
+        let gradientLayerPoints =  [CGPoint(x: 1.0, y: 1.0), CGPoint(x: 0.0, y: 0.0)]
         locationButton.layer.cornerRadius = locationButton.frame.size.height / 2
-        locationButton.setGradientBackground(colorOne: Colors.blue, colorTwo: Colors.lightBlue, opacity: 1.0)
+        locationButton.setGradientBackground(colorOne: Colors.blue, colorTwo: Colors.lightBlue, opacity: 1.0, points: gradientLayerPoints)
         locationButton.layer.masksToBounds = true
         locationButton.setTitle("Enable Location Service", for: .normal)
         locationButton.titleLabel?.font = UIFont(name: "Avenir-Medium", size: 20.0)

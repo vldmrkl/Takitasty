@@ -28,12 +28,13 @@ class ViewController: UIViewController {
     func setUpLayout() {
         if let bgImage = UIImage(named: "food-bg") {
             let imageView = UIImageView(frame: self.view.bounds);
+            let gradientLayerPoints =  [CGPoint(x: 1.0, y: 1.0), CGPoint(x: 0.0, y: 0.0)]
 
             imageView.image = bgImage
             imageView.contentMode = .scaleAspectFill
             self.view.addSubview(imageView)
 
-            view.setGradientBackground(colorOne: Colors.lightBlue, colorTwo: Colors.darkBlue, opacity: 0.9)
+            view.setGradientBackground(colorOne: Colors.lightBlue, colorTwo: Colors.darkBlue, opacity: 0.9, points: gradientLayerPoints)
             self.view.sendSubviewToBack(imageView)
         }
 
