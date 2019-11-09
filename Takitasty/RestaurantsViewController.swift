@@ -40,7 +40,7 @@ class RestaurantsViewController: UINavigationController, UITableViewDataSource, 
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "restaurantCell", for: indexPath) as! RestaurantTableViewCell
-        cell.nameLabel.text = restaurants[indexPath.row].name!
+        cell.restaurant = restaurants[indexPath.row]
         return cell
     }
 }

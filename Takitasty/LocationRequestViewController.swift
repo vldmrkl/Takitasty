@@ -18,7 +18,7 @@ class LocationRequestViewController: UIViewController, CLLocationManagerDelegate
             let menuVC = ViewController()
             menuVC.modalPresentationStyle = .fullScreen
             if let cityName = location?.name {
-                menuVC.city = cityName
+                UserDefaults.standard.set(cityName, forKey: "city")
             }
 
             self.present(menuVC, animated: true, completion: nil)

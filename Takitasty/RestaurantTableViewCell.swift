@@ -11,13 +11,13 @@ import UIKit
 
 class RestaurantTableViewCell: UITableViewCell {
     let restaurantImage: UIImageView = {
-        let img = UIImageView()
-        img.image = UIImage(named: "food")
-        img.layer.cornerRadius = 15
-        img.contentMode = .scaleAspectFill
-        img.translatesAutoresizingMaskIntoConstraints = false
-        img.clipsToBounds = true
-        return img
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "food")
+        imageView.layer.cornerRadius = 15
+        imageView.contentMode = .scaleAspectFill
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.clipsToBounds = true
+        return imageView
     }()
 
     let nameLabel:UILabel = {
@@ -37,11 +37,20 @@ class RestaurantTableViewCell: UITableViewCell {
             if let name = restaurantItem.name {
                 nameLabel.text = name
             }
+            if let imageURL = restaurantItem.featuredImageURL {
+                print(imageURL)
+                if let url = URL(string: imageURL), let data = try? Data(contentsOf: url) {
+                    if let image = UIImage(data: data) {
+                        restaurantImage.image = image
+                    }
+                }
+            }
         }
     }
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        self.selectionStyle = .none
         self.contentView.addSubview(restaurantImage)
         self.contentView.addSubview(nameLabel)
 

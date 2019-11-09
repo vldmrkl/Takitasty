@@ -10,7 +10,7 @@ import UIKit
 
 class ViewController: UIViewController {
     private let service = APIService()
-    var city = "Toronto"
+    var city = UserDefaults.standard.string(forKey: "city") ?? "unknown location"
     var nearbyRestaurants: [Restaurant] = [] {
         didSet {
             let restaurantsVC = RestaurantsViewController()
@@ -74,7 +74,7 @@ class ViewController: UIViewController {
         buttonsStackView.spacing = 10
 
         buttonsStackView.addArrangedSubview(createMenuButton(title: "All Restaurants", action: nil))
-        buttonsStackView.addArrangedSubview(createMenuButton(title: "Restaurants By Categories", action: #selector(showRestaurants)))
+        buttonsStackView.addArrangedSubview(createMenuButton(title: "Restaurants Nearby", action: #selector(showRestaurants)))
         buttonsStackView.addArrangedSubview(createMenuButton(title: "I'm Feeling Lucky", action: nil))
 
         mainStackView.addArrangedSubview(buttonsStackView)
@@ -149,8 +149,6 @@ class ViewController: UIViewController {
             }
         }
     }
-
-
 
     override var preferredStatusBarStyle : UIStatusBarStyle {
         return UIStatusBarStyle.lightContent
