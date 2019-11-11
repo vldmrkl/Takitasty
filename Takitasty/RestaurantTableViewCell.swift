@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 class RestaurantTableViewCell: UITableViewCell {
-    let restaurantImage: UIImageView = {
+    let restaurantImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "food")
         imageView.layer.cornerRadius = 15
@@ -20,7 +20,7 @@ class RestaurantTableViewCell: UITableViewCell {
         return imageView
     }()
 
-    let nameLabel:UILabel = {
+    let nameLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 32)
         label.textColor =  .white
@@ -28,56 +28,55 @@ class RestaurantTableViewCell: UITableViewCell {
         return label
     }()
 
-    @objc let maskedView = UIView()
+    @objc let fadeView = UIView()
     let gradientMaskLayer = CAGradientLayer()
 
-    var restaurant: Restaurant? {
-        didSet {
-            guard let restaurantItem = restaurant else {return}
-            if let name = restaurantItem.name {
-                nameLabel.text = name
-            }
-            if let imageURL = restaurantItem.featuredImageURL {
-                print(imageURL)
-                if let url = URL(string: imageURL), let data = try? Data(contentsOf: url) {
-                    if let image = UIImage(data: data) {
-                        restaurantImage.image = image
-                    }
-                }
-            }
-        }
-    }
+    var restaurant: Restaurant?
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.selectionStyle = .none
-        self.contentView.addSubview(restaurantImage)
-        self.contentView.addSubview(nameLabel)
 
-        restaurantImage.centerXAnchor.constraint(equalTo:self.contentView.centerXAnchor).isActive = true
-        restaurantImage.centerYAnchor.constraint(equalTo:self.contentView.centerYAnchor).isActive = true
-        restaurantImage.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, constant: -30).isActive = true
-        restaurantImage.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, constant: -30).isActive = true
-
-        nameLabel.leadingAnchor.constraint(equalTo: restaurantImage.leadingAnchor, constant: 10).isActive = true
-        nameLabel.bottomAnchor.constraint(equalTo: restaurantImage.bottomAnchor, constant: -5).isActive = true
-        nameLabel.layer.zPosition = 2
-        self.contentView.addSubview(maskedView)
-        maskedView.translatesAutoresizingMaskIntoConstraints = false
-        maskedView.centerXAnchor.constraint(equalTo:self.contentView.centerXAnchor).isActive = true
-        maskedView.centerYAnchor.constraint(equalTo:self.contentView.centerYAnchor).isActive = true
-        maskedView.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, constant: -30).isActive = true
-        maskedView.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, constant: -30).isActive = true
-        self.addObserver(self, forKeyPath: "maskedView.bounds", options: .new, context: nil)
+        setUpLayout()
     }
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
 
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        restaurantImageView.image = UIImage(named: "food")
+    }
+
+    func setUpLayout(){
+        self.selectionStyle = .none
+
+        self.contentView.addSubview(restaurantImageView)
+        self.contentView.addSubview(nameLabel)
+
+        restaurantImageView.centerXAnchor.constraint(equalTo:self.contentView.centerXAnchor).isActive = true
+        restaurantImageView.centerYAnchor.constraint(equalTo:self.contentView.centerYAnchor).isActive = true
+        restaurantImageView.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, constant: -30).isActive = true
+        restaurantImageView.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, constant: -30).isActive = true
+
+        nameLabel.leadingAnchor.constraint(equalTo: restaurantImageView.leadingAnchor, constant: 10).isActive = true
+        nameLabel.bottomAnchor.constraint(equalTo: restaurantImageView.bottomAnchor, constant: -5).isActive = true
+        nameLabel.widthAnchor.constraint(equalTo: restaurantImageView.widthAnchor, constant: -10).isActive = true
+        nameLabel.numberOfLines = 0
+        nameLabel.layer.zPosition = 2
+
+        self.contentView.addSubview(fadeView)
+        fadeView.translatesAutoresizingMaskIntoConstraints = false
+        fadeView.centerXAnchor.constraint(equalTo:self.contentView.centerXAnchor).isActive = true
+        fadeView.centerYAnchor.constraint(equalTo:self.contentView.centerYAnchor).isActive = true
+        fadeView.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, constant: -30).isActive = true
+        fadeView.heightAnchor.constraint(equalTo: self.contentView.heightAnchor, constant: -30).isActive = true
+        self.addObserver(self, forKeyPath: "fadeView.bounds", options: .new, context: nil)
+    }
+
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        if (keyPath == "maskedView.bounds") {
-            maskedView.setGradientBackground(colorOne: UIColor.clear, colorTwo: UIColor.black, opacity: 0.7, cornerRadius: 15.0)
+        if (keyPath == "fadeView.bounds") {
+            fadeView.setGradientBackground(colorOne: UIColor.clear, colorTwo: UIColor.black, opacity: 0.7, cornerRadius: 15.0)
             return
         }
 
@@ -88,5 +87,4 @@ class RestaurantTableViewCell: UITableViewCell {
             context: context
         )
     }
-
 }

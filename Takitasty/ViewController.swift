@@ -10,7 +10,7 @@ import UIKit
 
 class ViewController: UIViewController {
     private let service = APIService()
-    var city = UserDefaults.standard.string(forKey: "city") ?? "unknown location"
+    var city = "unknown location"
     var nearbyRestaurants: [Restaurant] = [] {
         didSet {
             let restaurantsVC = RestaurantsViewController()
@@ -22,6 +22,9 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        if let city = UserDefaults.standard.string(forKey: "city") {
+            self.city = city
+        }
         setUpLayout()
     }
 

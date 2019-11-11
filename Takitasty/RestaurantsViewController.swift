@@ -8,7 +8,7 @@
 
 import UIKit
 
-class RestaurantsViewController: UINavigationController, UITableViewDataSource, UITableViewDelegate {
+class RestaurantsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     let restaurantsTableView = UITableView()
     var restaurants: [Restaurant] = []
 
@@ -40,7 +40,19 @@ class RestaurantsViewController: UINavigationController, UITableViewDataSource, 
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "restaurantCell", for: indexPath) as! RestaurantTableViewCell
-        cell.restaurant = restaurants[indexPath.row]
+
+        if let name = restaurants[indexPath.row].name {
+            cell.nameLabel.text = name
+        }
+
+        if let imageURL = restaurants[indexPath.row].featuredImageURL {
+            if let url = URL(string: imageURL), let data = try? Data(contentsOf: url) {
+                if let image = UIImage(data: data) {
+                    cell.restaurantImageView.image = image
+                }
+            }
+        }
+
         return cell
     }
 }
