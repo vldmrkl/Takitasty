@@ -142,7 +142,6 @@ class ViewController: UIViewController {
     @objc func showRestaurants(sender: UIButton) {
         let lat = UserDefaults.standard.double(forKey: "lat")
         let lon = UserDefaults.standard.double(forKey: "lon")
-        print("\(lat) \(lon)")
         service.fetchRestaurants(lat, lon) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {

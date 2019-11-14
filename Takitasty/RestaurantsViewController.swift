@@ -17,7 +17,6 @@ class RestaurantsViewController: UIViewController, UITableViewDataSource, UITabl
         restaurantsTableView.dataSource = self
         restaurantsTableView.delegate = self
         restaurantsTableView.register(RestaurantTableViewCell.self, forCellReuseIdentifier: "restaurantCell")
-        view.backgroundColor = .white
         view.addSubview(restaurantsTableView)
         
         restaurantsTableView.translatesAutoresizingMaskIntoConstraints = false
@@ -54,5 +53,11 @@ class RestaurantsViewController: UIViewController, UITableViewDataSource, UITabl
         }
 
         return cell
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let restaurantDetailsVC = RestaurantDetailsViewController()
+        restaurantDetailsVC.restaurant = restaurants[indexPath.row]
+        self.show(restaurantDetailsVC, sender: self)
     }
 }

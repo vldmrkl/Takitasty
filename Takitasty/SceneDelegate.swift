@@ -20,7 +20,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let _ = (scene as? UIWindowScene) else { return }
         if let windowScene = scene as? UIWindowScene {
             self.window = UIWindow(windowScene: windowScene)
-            
+            self.window?.backgroundColor = UIColor(named: "appBackgroundColor")
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let viewController: UIViewController
             let lat = UserDefaults.standard.double(forKey: "lat")
@@ -35,8 +35,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             self.window?.rootViewController = viewController
             self.window?.makeKeyAndVisible()
         }
-        
-        
     }
     
     func sceneDidDisconnect(_ scene: UIScene) {
