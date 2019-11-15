@@ -7,9 +7,11 @@
 //
 
 import UIKit
+import CoreLocation
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, CLLocationManagerDelegate {
     private let service = APIService()
+    var locationManager = CLLocationManager()
     var city = "unknown location"
     var nearbyRestaurants: [Restaurant] = [] {
         didSet {
@@ -19,9 +21,16 @@ class ViewController: UIViewController {
             self.show(restaurantsVC, sender: self)
         }
     }
+    var locationLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .white
+        label.font = UIFont(name: "Futura-Medium", size: 14.0)
+        return label
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        locationManager.delegate = self
         if let city = UserDefaults.standard.string(forKey: "city") {
             self.city = city
         }
@@ -98,10 +107,7 @@ class ViewController: UIViewController {
             locationStackView.addArrangedSubview(locationIconImageView)
         }
 
-        let locationLabel = UILabel()
         locationLabel.text = "\(city)".uppercased()
-        locationLabel.textColor = .white
-        locationLabel.font = UIFont(name: "Futura-Medium", size: 14.0)
         locationStackView.addArrangedSubview(locationLabel)
         locationStackView.layoutMargins.top = 300
 
@@ -116,6 +122,8 @@ class ViewController: UIViewController {
         self.view.addSubview(locationStackView)
         locationStackView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
         locationStackView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -25).isActive = true
+        locationStackView.isUserInteractionEnabled = true
+        locationStackView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(updateLocation)))
 
     }
 
@@ -145,11 +153,42 @@ class ViewController: UIViewController {
         service.fetchRestaurants(lat, lon) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
-                case .success(let restaurants): self?.nearbyRestaurants = restaurants
+                case .success(let restaurants):
+                    self?.nearbyRestaurants = restaurants
                 case .failure: print("Couldn't fetch Restaurants")
                 }
             }
         }
+    }
+
+    @objc func updateLocation(sender: UIStackView) {
+        locationManager.requestLocation()
+    }
+
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        if let currentLocation = locations.last {
+            let lat = currentLocation.coordinate.latitude
+            let lon = currentLocation.coordinate.longitude
+            service.fetchLocation(lat, lon) { [weak self] result in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(let location):
+                        if !location.name.isEmpty {
+                            UserDefaults.standard.set(lat, forKey: "lat")
+                            UserDefaults.standard.set(lon, forKey: "lon")
+                            self?.city = location.name
+                            UserDefaults.standard.string(forKey: "city")
+                            self?.locationLabel.text = "\(location.name)".uppercased()
+                        }
+                    case .failure: self?.city = "unknown"
+                    }
+                }
+            }
+        }
+    }
+
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print("error:: \(error.localizedDescription)")
     }
 
     override var preferredStatusBarStyle : UIStatusBarStyle {
