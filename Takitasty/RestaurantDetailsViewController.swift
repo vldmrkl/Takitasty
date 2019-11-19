@@ -96,6 +96,19 @@ class RestaurantDetailsViewController: UIViewController, MKMapViewDelegate {
         dismissButton.heightAnchor.constraint(equalToConstant: 30.0).isActive = true
         dismissButton.widthAnchor.constraint(equalToConstant: 30.0).isActive = true
 
+        let descriptionLabel = UILabel()
+        descriptionLabel.text = descriptionBuilder()
+        descriptionLabel.font = UIFont.systemFont(ofSize: 22)
+        descriptionLabel.textColor =  UIColor(named: "mainTextColor")
+        self.view.addSubview(descriptionLabel)
+        descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
+        descriptionLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 15).isActive = true
+        descriptionLabel.widthAnchor.constraint(equalTo: self.view.widthAnchor, constant: -30).isActive = true
+        descriptionLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 25).isActive = true
+
+        descriptionLabel.widthAnchor.constraint(equalTo: self.view.widthAnchor, constant: -10).isActive = true
+        descriptionLabel.numberOfLines = 0
+
         self.view.addSubview(mapView)
         mapView.translatesAutoresizingMaskIntoConstraints = false
         mapView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
@@ -132,5 +145,35 @@ class RestaurantDetailsViewController: UIViewController, MKMapViewDelegate {
             change: change,
             context: context
         )
+    }
+
+    func descriptionBuilder() -> String {
+        var description = ""
+        description += ["This place", "This restaurant"].randomElement() ?? (restaurant?.name)!
+        description += " "
+
+        if let cuisines = restaurant?.cuisines {
+            description += ["is well-known for its", "specializes in", "serves"].randomElement()!
+            description += " \(cuisines) food. "
+        }
+
+        if let ratingText = restaurant?.ratingText {
+            description += "It has "
+            description += ratingText == "Average" ? "an" : "a"
+            description += " \(ratingText.lowercased()) rating among the visitors. "
+        }
+
+        if let priceRange = restaurant?.priceRange {
+            description += "The price range is "
+            for _ in 1...priceRange {
+                description += "$"
+            }
+            description += "\n"
+        }
+
+        description += ["Come enjoy a delicious lunch, dinner, or late-night meal.", "Their staff are knowledgeable and attentive, providing quality service in a casual and comfortable atmosphere.", "The next time you want to try some of the best \(restaurant?.cuisines ?? "") food, look no further than \((restaurant?.name)!)!"].randomElement()!
+
+
+        return description
     }
 }

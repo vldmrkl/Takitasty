@@ -16,6 +16,8 @@ struct Restaurant {
     let cuisines: String?
     let priceRange: Int?
     let featuredImageURL: String?
+    let rating: Float?
+    let ratingText: String?
 
     init?(json: [String: Any]) {
         let id = json["id"] as? Int
@@ -28,6 +30,12 @@ struct Restaurant {
         let cuisines = json["cuisines"] as? String
         let priceRange = json["price_range"] as? Int
         let featuredImageURL = json["featured_image"] as? String
+        var rating: Float?
+        var ratingText = ""
+        if let userRating = json["user_rating"] as? [String: Any] {
+            rating = Float(userRating["aggregate_rating"] as! String)
+            ratingText = userRating["rating_text"] as! String
+        }
 
         self.id = id
         self.name = name
@@ -36,5 +44,7 @@ struct Restaurant {
         self.cuisines = cuisines
         self.priceRange = priceRange
         self.featuredImageURL = featuredImageURL
+        self.rating = rating
+        self.ratingText = ratingText
     }
 }

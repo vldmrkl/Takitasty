@@ -147,6 +147,5 @@ class LocationRequestViewController: UIViewController, CLLocationManagerDelegate
         self.view.addSubview(locationButton)
         locationButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
         locationButton.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -50).isActive = true
-
     }
 }
