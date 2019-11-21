@@ -104,7 +104,8 @@ class RestaurantDetailsViewController: UIViewController, MKMapViewDelegate {
         descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         descriptionLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 15).isActive = true
         descriptionLabel.widthAnchor.constraint(equalTo: self.view.widthAnchor, constant: -30).isActive = true
-        descriptionLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 25).isActive = true
+        descriptionLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor).isActive = true
+
 
         descriptionLabel.widthAnchor.constraint(equalTo: self.view.widthAnchor, constant: -10).isActive = true
         descriptionLabel.numberOfLines = 0
@@ -115,6 +116,7 @@ class RestaurantDetailsViewController: UIViewController, MKMapViewDelegate {
         mapView.centerXAnchor.constraint(equalTo:self.view.centerXAnchor).isActive = true
         mapView.heightAnchor.constraint(equalToConstant: self.view.frame.size.height / 4).isActive = true
         mapView.widthAnchor.constraint(equalTo: self.view.widthAnchor).isActive = true
+        descriptionLabel.bottomAnchor.constraint(equalTo: mapView.topAnchor).isActive = true
     }
 
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
@@ -151,10 +153,12 @@ class RestaurantDetailsViewController: UIViewController, MKMapViewDelegate {
         var description = ""
         description += ["This place", "This restaurant"].randomElement() ?? (restaurant?.name)!
         description += " "
+        var foodType = ""
 
         if let cuisines = restaurant?.cuisines {
+            foodType = cuisines.replacingOccurrences(of: ",", with: " and")
             description += ["is well-known for its", "specializes in", "serves"].randomElement()!
-            description += " \(cuisines) food. "
+            description += " \(foodType) food. "
         }
 
         if let ratingText = restaurant?.ratingText {
@@ -164,14 +168,23 @@ class RestaurantDetailsViewController: UIViewController, MKMapViewDelegate {
         }
 
         if let priceRange = restaurant?.priceRange {
-            description += "The price range is "
-            for _ in 1...priceRange {
-                description += "$"
+            description += "Prices are "
+            switch priceRange {
+            case 1:
+                description += "low."
+            case 2:
+                description += "medium."
+            case 3:
+                description += "high."
+            case 4:
+                description += "very high."
+            default:
+                description += "unknown."
             }
-            description += "\n"
+            description += "\n\n"
         }
 
-        description += ["Come enjoy a delicious lunch, dinner, or late-night meal.", "Their staff are knowledgeable and attentive, providing quality service in a casual and comfortable atmosphere.", "The next time you want to try some of the best \(restaurant?.cuisines ?? "") food, look no further than \((restaurant?.name)!)!"].randomElement()!
+        description += ["Come enjoy a delicious lunch, dinner, or late-night meal.", "Their staff are knowledgeable and attentive, providing quality service in a casual and comfortable atmosphere.", "The next time you want to try some of the best \(foodType) food, look no further than \((restaurant?.name)!)!"].randomElement()!
 
 
         return description

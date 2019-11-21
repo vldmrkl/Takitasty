@@ -33,7 +33,9 @@ struct Restaurant {
         var rating: Float?
         var ratingText = ""
         if let userRating = json["user_rating"] as? [String: Any] {
-            rating = Float(userRating["aggregate_rating"] as! String)
+            if let aggregateRating = userRating["aggregate_rating"] as? String {
+                rating = Float(aggregateRating)
+            }
             ratingText = userRating["rating_text"] as! String
         }
 

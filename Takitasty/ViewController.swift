@@ -17,7 +17,14 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         didSet {
             let restaurantsVC = RestaurantsViewController()
             restaurantsVC.restaurants = nearbyRestaurants
-            restaurantsVC.modalPresentationStyle = .fullScreen
+            self.show(restaurantsVC, sender: self)
+        }
+    }
+
+    var popularRestaurants: [Restaurant] = [] {
+        didSet {
+            let restaurantsVC = RestaurantsViewController()
+            restaurantsVC.restaurants = popularRestaurants
             self.show(restaurantsVC, sender: self)
         }
     }
@@ -85,8 +92,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         buttonsStackView.distribution = .equalSpacing
         buttonsStackView.spacing = 10
 
-        buttonsStackView.addArrangedSubview(createMenuButton(title: "All Restaurants", action: nil))
-        buttonsStackView.addArrangedSubview(createMenuButton(title: "Restaurants Nearby", action: #selector(showRestaurants)))
+        buttonsStackView.addArrangedSubview(createMenuButton(title: "Popular Restaurants", action: #selector(showPopularRestaurants)))
+        buttonsStackView.addArrangedSubview(createMenuButton(title: "Restaurants Nearby", action: #selector(showNearbyRestaurants)))
         buttonsStackView.addArrangedSubview(createMenuButton(title: "I'm Feeling Lucky", action: nil))
 
         mainStackView.addArrangedSubview(buttonsStackView)
@@ -147,10 +154,24 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         print("kaboom")
     }
 
-    @objc func showRestaurants(sender: UIButton) {
+    @objc func showPopularRestaurants(sender: UIButton) {
         let lat = UserDefaults.standard.double(forKey: "lat")
         let lon = UserDefaults.standard.double(forKey: "lon")
-        service.fetchRestaurants(lat, lon) { [weak self] result in
+        service.fetchPopularRestaurants(lat, lon) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let restaurants):
+                    self?.popularRestaurants = restaurants
+                case .failure: print("Couldn't fetch Restaurants")
+                }
+            }
+        }
+    }
+
+    @objc func showNearbyRestaurants(sender: UIButton) {
+        let lat = UserDefaults.standard.double(forKey: "lat")
+        let lon = UserDefaults.standard.double(forKey: "lon")
+        service.fetchNearbyRestaurants(lat, lon) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let restaurants):

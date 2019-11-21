@@ -43,7 +43,47 @@ class APIService {
         }.resume()
     }
 
-    func fetchRestaurants(_ latitude: Double, _ longitude: Double, handler: @escaping (Result<[Restaurant], Error>) -> Void) {
+    func fetchPopularRestaurants(_ latitude: Double, _ longitude: Double, handler: @escaping (Result<[Restaurant], Error>) -> Void) {
+        var urlComponents: URLComponents = URLComponents(url: API_URL, resolvingAgainstBaseURL: true)!
+        urlComponents.path = "/api/v2.1/search"
+        urlComponents.queryItems =  [
+            URLQueryItem(name: "lat", value: String(latitude)),
+            URLQueryItem(name: "lon", value: String(longitude)),
+            URLQueryItem(name: "count", value: "100"),
+            URLQueryItem(name: "sort", value: "rating")
+        ]
+
+        var request = URLRequest(url: urlComponents.url!)
+        request.httpMethod = "GET"
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        request.addValue(APIKey.value, forHTTPHeaderField: "User-Key")
+
+        URLSession.shared.dataTask(with: request) { (data, response, error) in
+            var restaurants: [Restaurant] = []
+
+            if let responseData = data, error == nil {
+                do {
+                    if let json = try JSONSerialization.jsonObject(with: responseData, options: []) as? [String: Any] {
+
+                        if let popularRestaurants = json["restaurants"] as? [[String: Any]]{
+                            for case let popularRestaurant in popularRestaurants  {
+                                let restaurantJSON = popularRestaurant["restaurant"] as! [String : Any]
+                                if let restaurant = Restaurant(json: restaurantJSON) {
+                                    restaurants.append(restaurant)
+                                }
+                            }
+                        }
+                    }
+
+                    handler(.success(restaurants))
+                } catch {
+                    handler(.failure(error))
+                }
+            }
+        }.resume()
+    }
+
+    func fetchNearbyRestaurants(_ latitude: Double, _ longitude: Double, handler: @escaping (Result<[Restaurant], Error>) -> Void) {
         var urlComponents: URLComponents = URLComponents(url: API_URL, resolvingAgainstBaseURL: true)!
         urlComponents.path = "/api/v2.1/geocode"
         urlComponents.queryItems =  [
